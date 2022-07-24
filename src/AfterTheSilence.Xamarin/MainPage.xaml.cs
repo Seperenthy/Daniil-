@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,6 +13,13 @@ namespace AfterTheSilence.Xamarin
     {
         private readonly List<MessageBlock> messageBlocks = new List<MessageBlock>();
         private readonly IFordePathService _fordePathService;
+
+        public ObservableCollection<Message> Messages { get; } = new ObservableCollection<Message>()
+        {
+            new Message(MessageType.Owner, "Овнер", "owner", DateTime.Now),
+            new Message(MessageType.Bot, "Bot", "bot", DateTime.Now)
+        };
+
         public MainPage(IFordePathService folderPath)
         {
             _fordePathService = folderPath;
@@ -19,6 +27,8 @@ namespace AfterTheSilence.Xamarin
             InitializeComponent();
 
             InitializeScript();
+
+            BindingContext = this;
         }
 
         private async void InitializeScript()
