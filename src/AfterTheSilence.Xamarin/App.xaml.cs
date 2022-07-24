@@ -10,8 +10,7 @@ namespace AfterTheSilence.Xamarin
         {
             InitializeComponent();
 
-            IFordePathService test = DependencyService.Get<IFordePathService>();
-            MainPage = new MainPage(test);
+            MainPage = new MainPage();
         }
 
         protected override void OnStart()
