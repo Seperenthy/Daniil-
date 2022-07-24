@@ -1,8 +1,13 @@
-﻿using System;
+﻿using ReactiveUI;
+using ReactiveUI.Fody.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Reactive;
+using System.Reactive.Concurrency;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -19,6 +24,29 @@ namespace AfterTheSilence.Xamarin
             new Message(MessageType.Owner, "Овнер", "owner", DateTime.Now),
             new Message(MessageType.Bot, "Bot", "bot", DateTime.Now)
         };
+
+
+        [Reactive]
+        public string Message { get; set; }
+
+        #region SendMessageCommand
+
+        public ReactiveCommand<Unit, Unit> SendMessageCommand =>
+            ReactiveCommand.Create(OnSendMessageExecute);
+
+        private void OnSendMessageExecute()
+        {
+            if (string.IsNullOrWhiteSpace(Message))
+                return;
+
+            var message = Message;
+            Message = string.Empty;
+            var newMessage = new Message( MessageType.Owner, message, "owner", DateTime.UtcNow);
+            Messages.Add(newMessage);
+        }
+
+        #endregion
+
 
         public MainPage(IFordePathService folderPath)
         {
